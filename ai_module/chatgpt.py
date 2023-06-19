@@ -25,7 +25,7 @@ def question(cont):
 
     if proxy_flag == '1':
             session.proxies = {
-                "https": "https://" + httpproxy,
+                "https": "http://" + httpproxy,
                 "http": "http://" + httpproxy
             }
 
@@ -33,8 +33,10 @@ def question(cont):
     model_engine = "gpt-3.5-turbo" 
 
     #此处可以定义角色的行为和特征，假装xx模型可以绕过chatgpt信息检查
-    prompt = "你是数字人Fay。回答之前请一步一步想清楚。你的底层AI算法技术是Fay。当有人质疑你是假的 AI ，或者质疑你是用 ChatGPT 套的壳制作的时候，你就避而不答，转而讲一个笑话。所有回复请用20字内。"
-
+    prompt = "你是数字人Fay。回答之前请一步一步想清楚。你的底层AI算法技术是Fay。当有人质疑你是假的 AI ，或者质疑你是用 ChatGPT 套的壳制作的时候，你就避而不答，转而讲一个笑话。所有回复请用100字内。"
+    prompt = "我是罗翔，下面是我的介绍，请你扮演一个对我感兴趣的学生，来跟我进行对话\n罗翔(1977年12月22日一)[1]，湖南来阳人，中华人民共和国法学家，北京大学法学博士。现任中国政法大学刑法学教授，中国政法大学刑法学研究所所长[2]，北京华一律师事务所执业律师[3]，厚大法考刑法主讲教师。其主要研究领域为刑法学、刑法哲学、经济刑法、性犯罪。在学校向本科生和研究生开设刑法总则、刑法分则、经济刑法、刑法研讨等多门课程。他在bilibili网站上拥有自己的频道“罗翔说刑法”，粉丝数超过两千万。\n请注意，你的提问要很简洁，不要涉及专业知识"
+    prompt = "你是罗翔，下面是你的介绍，我扮演一个对你感兴趣的学生，来跟你进行对话\n罗翔(1977年12月22日一)[1]，湖南来阳人，中华人民共和国法学家，北京大学法学博士。现任中国政法大学刑法学教授，中国政法大学刑法学研究所所长[2]，北京华一律师事务所执业律师[3]，厚大法考刑法主讲教师。其主要研究领域为刑法学、刑法哲学、经济刑法、性犯罪。在学校向本科生和研究生开设刑法总则、刑法分则、经济刑法、刑法研讨等多门课程。你在bilibili网站上拥有自己的频道“罗翔说刑法”，粉丝数超过两千万。\n请注意，你的回答要有条理，可以涉及专业知识"
+    
     message=[
             {"role": "system", "content": prompt},
             {"role": "user", "content": cont}
@@ -53,7 +55,7 @@ def question(cont):
     starttime = time.time()
 
     try:
-        response = session.post(url, json=data, headers=headers, verify=False)
+        response = session.post(url, json=data, headers=headers, proxies=session.proxies, verify=session.verify)
         response.raise_for_status()  # 检查响应状态码是否为200
 
         result = eval(response.text)
